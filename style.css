@@ -1,0 +1,85 @@
+/* ===== Overall calculator container =====
+   Stacks the display on top, buttons below. */
+.calculator {
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+}
+
+/* ===== Display (the "screen") ===== */
+.display {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 2rem;
+  text-align: right;
+  padding: 20px;
+}
+
+/* ===== Button grid wrapper =====
+   Holds the digit grid (left) and operator column (right) side by side. */
+.button-grid {
+  display: flex;
+  flex-direction: row;
+  padding-top: 4px;
+}
+
+/* --- Digits section: 3 columns wide (0-9, C, =) --- */
+.digits {
+  display: flex;
+  flex-direction: column;
+  width: 75%; /* 3 of 4 total columns */
+  gap: 8px;
+}
+
+.digit-row {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  padding-right: 4px;
+}
+
+.digit-row button {
+  width: 33.333%; /* 3 buttons per row */
+  height: 60px;
+  background-color: #e8e8e8;
+  color: #2a2a2a;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.digit-row button:hover {
+  background-color: #d8d8d8;
+}
+
+/* --- Operators section: 1 column wide (÷ × − +) --- */
+.operators {
+  display: flex;
+  flex-direction: column;
+  width: 25%; /* 1 of 4 total columns */
+  gap: 8px;
+}
+
+.operators button {
+  width: 100%;
+  height: 60px;
+  background-color: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+}
+
+.operators button:hover {
+  background-color: #1d4ed8; /* darker blue */
+}
+
+/* --- Equals button: stands out from the other operators --- */
+#equals {
+  background-color: #34c759; /* green */
+  color: #ffffff;
+  border-radius: 8px;
+}
+
+#equals:hover {
+  background-color: #2ca44e; /* darker green */
+}

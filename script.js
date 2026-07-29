@@ -1,3 +1,5 @@
+// ===== Core math operations =====
+
 function add(a, b) {
   return a + b;
 }
@@ -9,10 +11,12 @@ function subtract(a, b) {
 function multiply(a, b) {
   return a * b;
 }
+
 function divide(a, b) {
   return a / b;
 }
 
+// Takes an operator symbol and two numbers, runs the matching operation.
 function operate(operator, num1, num2) {
   switch (operator) {
     case "+":
@@ -28,27 +32,32 @@ function operate(operator, num1, num2) {
   }
 }
 
-let result = operate("+", 5, 6);
-console.log(result);
-result = operate("-", 5, 6);
-console.log(result);
-result = operate("*", 5, 6);
-console.log(result);
-result = operate("/", 5, 6);
-console.log(result);
-result = operate("+", 5, 6);
-console.log(result);
+// ===== DOM references =====
 
-result = operate("+", 3, 5); // → 8
-console.log(result);
-result = operate("-", 10, 4); // → 6
+const digitBtns = document.querySelectorAll("[data-number]");
+const display = document.querySelector(".display");
+const clearBtn = document.querySelector(".clear");
 
-console.log(result);
+// ===== State =====
 
-result = operate("*", 6, 7); //→ 42
-console.log(result);
+// Holds the number currently being typed, as a string (so digits can
+// be appended one at a time without floating point issues).
+let currentInput = "";
 
-result = operate("/", 20, 4); //→ 5
-console.log(result);
-result = operate("/", 5, 0);
-console.log(result);
+// ===== Digit buttons =====
+// Each click appends its digit to currentInput and refreshes the display.
+
+digitBtns.forEach((digitBtn) => {
+  digitBtn.addEventListener("click", () => {
+    currentInput += digitBtn.dataset.number;
+    display.textContent = currentInput;
+  });
+});
+
+// ===== Clear button =====
+// Resets both the display and the stored input back to empty.
+
+clearBtn.addEventListener("click", () => {
+  currentInput = "";
+  display.textContent = 0;
+});

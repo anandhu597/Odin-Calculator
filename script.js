@@ -69,6 +69,9 @@ digitBtns.forEach((digitBtn) => {
 
 clearBtn.addEventListener("click", () => {
   currentInput = "";
+  firstNbr = "";
+  currentOp = "";
+  result = "";
   display.textContent = 0;
 });
 
@@ -93,9 +96,26 @@ operatorBtns.forEach((operatorBtn) => {
 // Runs the stored operation and displays the result. currentInput is synced
 // to the result afterward, so it can be used as the first number if the
 // user chains another operation (e.g. presses an operator again next).
+//
+// Guards against: dividing by zero (shows a message instead of Infinity,
+// then resets state) and running with incomplete input (does nothing if
+// an operator or second number hasn't been entered yet).
 
 equalBtn.addEventListener("click", () => {
-  result = operate(currentOp, Number(firstNbr), Number(currentInput));
-  display.textContent = result;
-  currentInput = String(result);
+  const dividingByZero = currentOp === "/" && currentInput === "0";
+  const hasCompleteInput =
+    currentOp !== "" && firstNbr !== "" && currentInput !== "";
+
+  if (dividingByZero) {
+    display.textContent = "Nope 🚫";
+    currentInput = "";
+    firstNbr = "";
+    currentOp = "";
+    result = "";
+  } else if (hasCompleteInput) {
+    result = operate(currentOp, Number(firstNbr), Number(currentInput));
+    result = Number(result.toFixed(8));
+    display.textContent = result;
+    currentInput = String(result);
+  }
 });

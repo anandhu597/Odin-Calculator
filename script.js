@@ -54,6 +54,10 @@ let currentOp = "";
 // The result of the most recent calculation.
 let result = "";
 
+let dividingByZero = "";
+
+let readyToCalculate = "";
+
 // ===== Digit buttons =====
 // Each click appends its digit onto currentInput and refreshes the display.
 
@@ -85,10 +89,28 @@ clearBtn.addEventListener("click", () => {
 
 operatorBtns.forEach((operatorBtn) => {
   operatorBtn.addEventListener("click", () => {
-    firstNbr = currentInput;
-    currentOp = operatorBtn.dataset.operator;
-    currentInput = "";
-    display.textContent = 0;
+    if (currentOp !== "") {
+      console.log("currentOP pending");
+
+      if (isDividingByZero(currentOp, currentInput)) {
+        dividingByZeroCase();
+      } else if (hasCompleteInput(currentOp, firstNbr, currentInput)) {
+        calculate();
+
+        firstNbr = result;
+        currentInput = "";
+        currentOp = operatorBtn.dataset.operator;
+      }
+
+      console.log(result);
+      console.log(currentOp);
+      console.log(firstNbr);
+    } else {
+      firstNbr = currentInput;
+      currentOp = operatorBtn.dataset.operator;
+      currentInput = "";
+      display.textContent = 0;
+    }
   });
 });
 
@@ -102,20 +124,35 @@ operatorBtns.forEach((operatorBtn) => {
 // an operator or second number hasn't been entered yet).
 
 equalBtn.addEventListener("click", () => {
-  const dividingByZero = currentOp === "/" && currentInput === "0";
-  const hasCompleteInput =
-    currentOp !== "" && firstNbr !== "" && currentInput !== "";
+  dividingByZero = isDividingByZero(currentOp, currentInput);
 
+  readyToCalculate = hasCompleteInput(currentOp, firstNbr, currentInput);
   if (dividingByZero) {
-    display.textContent = "Nope 🚫";
-    currentInput = "";
-    firstNbr = "";
-    currentOp = "";
-    result = "";
-  } else if (hasCompleteInput) {
-    result = operate(currentOp, Number(firstNbr), Number(currentInput));
-    result = Number(result.toFixed(8));
-    display.textContent = result;
-    currentInput = String(result);
+    dividingByZeroCase();
+  } else if (readyToCalculate) {
+    calculate();
   }
 });
+
+function isDividingByZero(currentOp, currentInput) {
+  return (dividingByZero = currentOp === "/" && currentInput === "0");
+}
+
+function hasCompleteInput(currentOp, firstNbr, currentInput) {
+  return currentOp !== "" && firstNbr !== "" && currentInput !== "";
+}
+
+function dividingByZeroCase() {
+  display.textContent = "Nope 🚫";
+  currentInput = "";
+  firstNbr = "";
+  currentOp = "";
+  result = "";
+}
+
+function calculate() {
+  result = operate(currentOp, Number(firstNbr), Number(currentInput));
+  result = Number(result.toFixed(8));
+  display.textContent = result;
+  currentInput = String(result);
+}

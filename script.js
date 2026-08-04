@@ -1,4 +1,4 @@
-// ===== Core math operations =====
+// Core math operations
 
 function add(a, b) {
   return a + b;
@@ -16,7 +16,6 @@ function divide(a, b) {
   return a / b;
 }
 
-// Takes an operator symbol and two numbers, runs the matching operation.
 function operate(operator, num1, num2) {
   switch (operator) {
     case "+":
@@ -32,7 +31,7 @@ function operate(operator, num1, num2) {
   }
 }
 
-// ===== DOM references =====
+// DOM references
 
 const digitBtns = document.querySelectorAll("[data-number]");
 const operatorBtns = document.querySelectorAll("[data-operator]");
@@ -40,36 +39,31 @@ const display = document.querySelector(".display");
 const clearBtn = document.querySelector(".clear");
 const equalBtn = document.querySelector(".equals");
 
-// ===== State =====
+// State
 
-// The number currently being typed, built up as a string one digit at a time.
-let currentInput = "";
+let currentInput = ""; // number currently being typed
+let firstNbr = ""; // first number of the current operation
+let currentOp = ""; // selected operator
+let result = ""; // most recent calculated result
 
-// The first number in the current operation (set when an operator is clicked).
-let firstNbr = "";
+let justCalculated = true;
 
-// The operator selected for the current operation (e.g. "+", "-", "*", "/").
-let currentOp = "";
-
-// The result of the most recent calculation.
-let result = "";
-
-let dividingByZero = "";
-
-let readyToCalculate = "";
-
-// ===== Digit buttons =====
-// Each click appends its digit onto currentInput and refreshes the display.
+// Digit buttons
 
 digitBtns.forEach((digitBtn) => {
   digitBtn.addEventListener("click", () => {
-    currentInput += digitBtn.dataset.number;
-    display.textContent = currentInput;
+    if (justCalculated === false) {
+      currentInput = digitBtn.dataset.number;
+      display.textContent = currentInput;
+      justCalculated = true;
+    } else {
+      currentInput += digitBtn.dataset.number;
+      display.textContent = currentInput;
+    }
   });
 });
 
-// ===== Clear button =====
-// Resets all calculator state back to its starting point.
+// Clear button
 
 clearBtn.addEventListener("click", () => {
   currentInput = "";
@@ -77,34 +71,30 @@ clearBtn.addEventListener("click", () => {
   currentOp = "";
   result = "";
   display.textContent = 0;
+  justCalculated = true;
 });
 
-// ===== Operator buttons =====
-// Stores the current input as the first number and the selected operator,
-// then resets currentInput so the next digits typed become the second number.
-//
-// currentInput is always kept up to date (including after "=", see below),
-// so this same logic works whether the user is starting a fresh calculation
-// or chaining onto a previous result.
+// Operator buttons
+// If an operator is already pending, evaluate it first (chaining support)
+// before switching to the newly clicked operator.
 
 operatorBtns.forEach((operatorBtn) => {
   operatorBtn.addEventListener("click", () => {
-    if (currentOp !== "") {
-      console.log("currentOP pending");
-
+    if (justCalculated === false) {
+      currentOp = operatorBtn.dataset.operator;
+      firstNbr = currentInput;
+      currentInput = "";
+      display.textContent = 0;
+    } else if (currentOp !== "") {
       if (isDividingByZero(currentOp, currentInput)) {
         dividingByZeroCase();
       } else if (hasCompleteInput(currentOp, firstNbr, currentInput)) {
         calculate();
-
         firstNbr = result;
         currentInput = "";
         currentOp = operatorBtn.dataset.operator;
       }
-
-      console.log(result);
-      console.log(currentOp);
-      console.log(firstNbr);
+      currentOp = operatorBtn.dataset.operator;
     } else {
       firstNbr = currentInput;
       currentOp = operatorBtn.dataset.operator;
@@ -114,32 +104,24 @@ operatorBtns.forEach((operatorBtn) => {
   });
 });
 
-// ===== Equals button =====
-// Runs the stored operation and displays the result. currentInput is synced
-// to the result afterward, so it can be used as the first number if the
-// user chains another operation (e.g. presses an operator again next).
-//
-// Guards against: dividing by zero (shows a message instead of Infinity,
-// then resets state) and running with incomplete input (does nothing if
-// an operator or second number hasn't been entered yet).
+// Equals button
 
 equalBtn.addEventListener("click", () => {
-  dividingByZero = isDividingByZero(currentOp, currentInput);
-
-  readyToCalculate = hasCompleteInput(currentOp, firstNbr, currentInput);
-  if (dividingByZero) {
+  if (isDividingByZero(currentOp, currentInput)) {
     dividingByZeroCase();
-  } else if (readyToCalculate) {
+  } else if (hasCompleteInput(currentOp, firstNbr, currentInput)) {
     calculate();
   }
 });
 
-function isDividingByZero(currentOp, currentInput) {
-  return (dividingByZero = currentOp === "/" && currentInput === "0");
+// Helpers
+
+function isDividingByZero(op, input) {
+  return op === "/" && input === "0";
 }
 
-function hasCompleteInput(currentOp, firstNbr, currentInput) {
-  return currentOp !== "" && firstNbr !== "" && currentInput !== "";
+function hasCompleteInput(op, first, input) {
+  return op !== "" && first !== "" && input !== "";
 }
 
 function dividingByZeroCase() {
@@ -155,4 +137,5 @@ function calculate() {
   result = Number(result.toFixed(8));
   display.textContent = result;
   currentInput = String(result);
+  justCalculated = false;
 }

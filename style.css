@@ -58,6 +58,8 @@
   flex-direction: column;
   width: 25%; /* 1 of 4 total columns */
   gap: 8px;
+  justify-content: space-between;
+  /* height: 100%; */
 }
 
 .operators button {
@@ -72,7 +74,9 @@
 .operators button:hover {
   background-color: #1d4ed8; /* darker blue */
 }
-
+.operators button:last-child {
+  flex-grow: 2; /* or whatever ratio looks right */
+}
 /* --- Equals button: stands out from the other operators --- */
 #equals {
   background-color: #34c759; /* green */

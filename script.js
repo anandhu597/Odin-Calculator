@@ -38,6 +38,8 @@ const operatorBtns = document.querySelectorAll("[data-operator]");
 const display = document.querySelector(".display");
 const clearBtn = document.querySelector(".clear");
 const equalBtn = document.querySelector(".equals");
+const backSpBtn = document.querySelector(".backspace");
+console.log(backSpBtn);
 
 // State
 
@@ -126,6 +128,20 @@ equalBtn.addEventListener("click", () => {
   }
 });
 
+// backspace button
+backSpBtn.addEventListener("click", () => {
+  if (currentInput !== "") {
+    console.log(currentInput);
+    let removed = currentInput.slice(0, -1);
+    console.log(removed);
+    currentInput = removed;
+    display.textContent = currentInput;
+    if (display.textContent === "") display.textContent = "0";
+  } else {
+    display.textContent = "0";
+  }
+});
+
 // Helpers
 
 function isDividingByZero(op, input) {
@@ -141,7 +157,7 @@ function dividingByZeroCase() {
   currentInput = "";
   firstNbr = "";
   currentOp = "";
-  result = "";
+  removed = "";
 }
 
 function calculate() {

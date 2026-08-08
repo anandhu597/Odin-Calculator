@@ -52,8 +52,20 @@ let justCalculated = true;
 
 digitBtns.forEach((digitBtn) => {
   digitBtn.addEventListener("click", () => {
-    if (justCalculated === false) {
-      currentInput = digitBtn.dataset.number;
+    console.log(currentInput.includes("."));
+
+    if (digitBtn.dataset.number === "." && currentInput === "") {
+      currentInput = "0.";
+      display.textContent = currentInput;
+      justCalculated = true;
+    } else if (currentInput.includes(".") && digitBtn.dataset.number === ".") {
+      console.log("Dote again clicked");
+    } else if (justCalculated === false) {
+      if (digitBtn.dataset.number === ".") {
+        currentInput = "0.";
+      } else {
+        currentInput = digitBtn.dataset.number;
+      }
       display.textContent = currentInput;
       justCalculated = true;
     } else {
@@ -138,4 +150,5 @@ function calculate() {
   display.textContent = result;
   currentInput = String(result);
   justCalculated = false;
+  currentOp = "";
 }

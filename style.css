@@ -52,7 +52,9 @@
   background-color: #d8d8d8;
 }
 
-/* --- Operators section: 1 column wide (÷ × − +) --- */
+/* --- Operators section: 1 column wide (÷ × − +) ---
+   justify-content: space-between stretches the 4 buttons across the
+   full column height, so + lines up with the bottom of the digit grid. */
 .operators {
   display: flex;
   flex-direction: column;
@@ -77,6 +79,7 @@
 .operators button:last-child {
   flex-grow: 2; /* or whatever ratio looks right */
 }
+
 /* --- Equals button: stands out from the other operators --- */
 #equals {
   background-color: #34c759; /* green */
@@ -86,4 +89,10 @@
 
 #equals:hover {
   background-color: #2ca44e; /* darker green */
+}
+
+/* --- Active state: brief flash applied via JS on button press,
+   so mouse clicks and keyboard presses get the same visual feedback --- */
+button.active {
+  background-color: #ffeb3b; /* bright yellow, just to clearly see it */
 }
